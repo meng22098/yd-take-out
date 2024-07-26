@@ -4,5 +4,5 @@ yd:
     host: localhost
     port: 3306
     database: yd_take_out
-    username: root
-    password: root
+    username: ityunbao
+    password: 123456
