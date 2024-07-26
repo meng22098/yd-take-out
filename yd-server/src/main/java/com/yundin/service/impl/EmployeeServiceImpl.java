@@ -1,7 +1,10 @@
 package com.yundin.service.impl;
 
 import com.yundin.constant.MessageConstant;
+import com.yundin.constant.PasswordConstant;
 import com.yundin.constant.StatusConstant;
+import com.yundin.context.BaseContext;
+import com.yundin.dto.EmployeeDTO;
 import com.yundin.dto.EmployeeLoginDTO;
 import com.yundin.entity.Employee;
 import com.yundin.exception.AccountLockedException;
@@ -9,9 +12,12 @@ import com.yundin.exception.AccountNotFoundException;
 import com.yundin.exception.PasswordErrorException;
 import com.yundin.mapper.EmployeeMapper;
 import com.yundin.service.EmployeeService;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
+
+import java.time.LocalDateTime;
 
 @Service
 public class EmployeeServiceImpl implements EmployeeService {
@@ -53,6 +59,25 @@ public class EmployeeServiceImpl implements EmployeeService {
 
         //3、返回实体对象
         return employee;
+    }
+
+    @Override
+    public void save(EmployeeDTO employeeDTO) {
+        Employee employee=new Employee();
+        //属性拷贝
+        BeanUtils.copyProperties(employeeDTO,employee);
+        //设置状态
+        employee.setStatus(StatusConstant.ENABLE);
+        //设置密码
+        String pwd=DigestUtils.md5DigestAsHex(PasswordConstant.DEFAULT_PASSWORD.getBytes());
+        employee.setPassword(pwd);
+        //通过公共字段设置
+        employee.setCreateTime(LocalDateTime.now());
+        employee.setUpdateTime(LocalDateTime.now());
+        //设置当前记录创建人id和修改人id
+        employee.setCreateUser(BaseContext.getCurrentId());//目前写个假数据，后期修改
+        employee.setUpdateUser(BaseContext.getCurrentId());
+        employeeMapper.insert(employee);
     }
 
 }

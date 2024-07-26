@@ -1,6 +1,7 @@
 package com.yundin.controller.admin;
 
 import com.yundin.constant.JwtClaimsConstant;
+import com.yundin.dto.EmployeeDTO;
 import com.yundin.dto.EmployeeLoginDTO;
 import com.yundin.entity.Employee;
 import com.yundin.properties.JwtProperties;
@@ -9,6 +10,7 @@ import com.yundin.service.EmployeeService;
 import com.yundin.utils.JwtUtil;
 import com.yundin.vo.EmployeeLoginVO;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiModelProperty;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +35,17 @@ public class EmployeeController {
     private EmployeeService employeeService;
     @Autowired
     private JwtProperties jwtProperties;
-
+    /**
+     * 添加员工
+     */
+    @PostMapping
+    @ApiOperation("新增雇员")
+    public Result save(@RequestBody EmployeeDTO employeeDTO)
+    {
+        log.info("新增雇员",employeeDTO);
+        employeeService.save(employeeDTO);
+        return Result.success();
+    }
     /**
      * 登录
      *
