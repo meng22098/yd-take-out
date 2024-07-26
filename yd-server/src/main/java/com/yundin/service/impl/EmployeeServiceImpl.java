@@ -1,16 +1,20 @@
 package com.yundin.service.impl;
 
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
 import com.yundin.constant.MessageConstant;
 import com.yundin.constant.PasswordConstant;
 import com.yundin.constant.StatusConstant;
 import com.yundin.context.BaseContext;
 import com.yundin.dto.EmployeeDTO;
 import com.yundin.dto.EmployeeLoginDTO;
+import com.yundin.dto.EmployeePageQueryDTO;
 import com.yundin.entity.Employee;
 import com.yundin.exception.AccountLockedException;
 import com.yundin.exception.AccountNotFoundException;
 import com.yundin.exception.PasswordErrorException;
 import com.yundin.mapper.EmployeeMapper;
+import com.yundin.result.PageResult;
 import com.yundin.service.EmployeeService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +22,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 public class EmployeeServiceImpl implements EmployeeService {
@@ -78,6 +83,19 @@ public class EmployeeServiceImpl implements EmployeeService {
         employee.setCreateUser(BaseContext.getCurrentId());//目前写个假数据，后期修改
         employee.setUpdateUser(BaseContext.getCurrentId());
         employeeMapper.insert(employee);
+    }
+
+    @Override
+    public PageResult pageQuery(EmployeePageQueryDTO employeePageQueryDTO) {
+        //开始分页查询
+        //PageHelper分页插件第一个是第几页，第二个是页的大小
+        PageHelper.startPage(employeePageQueryDTO.getPage(), employeePageQueryDTO.getPageSize());
+        Page<Employee> page=employeeMapper.pageQuery(employeePageQueryDTO);
+        //查询条数
+        long total = page.getTotal();
+        //结果数据
+        List<Employee> records = page.getResult();
+        return new PageResult(total, records);
     }
 
 }

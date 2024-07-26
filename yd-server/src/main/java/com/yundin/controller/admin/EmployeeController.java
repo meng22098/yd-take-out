@@ -3,8 +3,10 @@ package com.yundin.controller.admin;
 import com.yundin.constant.JwtClaimsConstant;
 import com.yundin.dto.EmployeeDTO;
 import com.yundin.dto.EmployeeLoginDTO;
+import com.yundin.dto.EmployeePageQueryDTO;
 import com.yundin.entity.Employee;
 import com.yundin.properties.JwtProperties;
+import com.yundin.result.PageResult;
 import com.yundin.result.Result;
 import com.yundin.service.EmployeeService;
 import com.yundin.utils.JwtUtil;
@@ -14,10 +16,7 @@ import io.swagger.annotations.ApiModelProperty;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -42,9 +41,18 @@ public class EmployeeController {
     @ApiOperation("新增雇员")
     public Result save(@RequestBody EmployeeDTO employeeDTO)
     {
-        log.info("新增雇员",employeeDTO);
+        log.info("新增雇员:{}",employeeDTO);//日志
         employeeService.save(employeeDTO);
         return Result.success();
+    }
+    @GetMapping("/page")
+    @ApiOperation("员工分页查询")
+    public Result<PageResult> page(EmployeePageQueryDTO employeePageQueryDTO)
+    {
+        System.out.println(1);
+        log.info("员工分页查询,参数为{}",employeePageQueryDTO);
+        PageResult pageResult=employeeService.pageQuery(employeePageQueryDTO);//后续定义
+        return Result.success(pageResult);
     }
     /**
      * 登录

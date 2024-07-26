@@ -2,7 +2,9 @@ package com.yundin.service;
 
 import com.yundin.dto.EmployeeDTO;
 import com.yundin.dto.EmployeeLoginDTO;
+import com.yundin.dto.EmployeePageQueryDTO;
 import com.yundin.entity.Employee;
+import com.yundin.result.PageResult;
 
 public interface EmployeeService {
 
@@ -14,4 +16,6 @@ public interface EmployeeService {
     Employee login(EmployeeLoginDTO employeeLoginDTO);
 
     void save(EmployeeDTO employeeDTO);
+
+    PageResult pageQuery(EmployeePageQueryDTO employeePageQueryDTO);
 }

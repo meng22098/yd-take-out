@@ -1,5 +1,7 @@
 package com.yundin.mapper;
 
+import com.github.pagehelper.Page;
+import com.yundin.dto.EmployeePageQueryDTO;
 import com.yundin.entity.Employee;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
@@ -19,4 +21,5 @@ public interface EmployeeMapper {
             "values " +
             "(#{name},#{username},#{password},#{phone},#{sex},#{idNumber},#{createTime},#{updateTime},#{createUser},#{updateUser},#{status})")
     void insert(Employee employee);
+    Page<Employee> pageQuery(EmployeePageQueryDTO employeePageQueryDTO);
 }
