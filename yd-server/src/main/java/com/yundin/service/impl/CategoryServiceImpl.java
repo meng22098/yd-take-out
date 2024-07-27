@@ -77,4 +77,26 @@ public class CategoryServiceImpl implements CategoryService {
     public void delete(Integer id) {
         categoryMapper.delete(id);
     }
+    /**
+     * 根据类型查询分类
+     *
+     * @param type
+     */
+    @Override
+    public List<Category> list(Integer type) {
+        return categoryMapper.list(type);
+    }
+    /**
+     *启用、禁用分类
+     *
+     * @param status
+     * @param id
+     */
+    @Override
+    public void startOrStop(Integer status,Long id) {
+        Category category=new Category();
+        category.setStatus(status);
+        category.setId(id);
+        categoryMapper.update(category);
+    }
 }
