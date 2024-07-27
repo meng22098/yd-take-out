@@ -10,4 +10,6 @@ public interface CategoryService {
     void save(CategoryDTO categoryDTO);
 
     void update(CategoryDTO categoryDTO);
+
+    void delete(Integer id);
 }
