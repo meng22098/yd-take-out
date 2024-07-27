@@ -10,4 +10,6 @@ public interface CategoryMapper {
     public Page<Category> pageQuery(CategoryPageQueryDTO categoryPageQueryDTO);
 
     void save(Category category);
+
+    void update(Category category);
 }
