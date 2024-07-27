@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yundin.mapper.DishMapper">
+    <select id="pageQuery" resultType="java.util.Map">
+        select *,c.name as categoryName  from dish as d left join category as c on d.category_id=c.id
+        <where>
+            <if test="name!=null">
+                and d.name like concat('%',#{name},'%')
+            </if>
+            <if test="categoryId!=null">
+                and d.category_id=#{categoryId}
+            </if>
+            <if test="status!=null">
+                and d.status = #{status}
+            </if>
+        </where>
+    </select>
+</mapper>
