@@ -11,7 +11,6 @@ import com.yundin.mapper.SetmealMapper;
 import com.yundin.result.PageResult;
 import com.yundin.service.SetmealService;
 import com.yundin.vo.SetmealVO;
-import org.apache.ibatis.annotations.Mapper;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -56,5 +55,20 @@ public class SetmealServiceImpl implements SetmealService {
             });
             setmealDishMapper.insertBatch(list);
         }
+    }
+
+    /**
+     * 根据id查询套餐
+     * @param id
+     * @return
+     */
+    @Override
+    public SetmealVO getById(Integer id) {
+        Setmeal setmeal=setmealMapper.getById(id);
+        List<SetmealDish> setmealDishes=setmealDishMapper.getById(id);
+        SetmealVO setmealVO=new SetmealVO();
+        BeanUtils.copyProperties(setmeal,setmealVO);
+        setmealVO.setSetmealDishes(setmealDishes);
+        return setmealVO;
     }
 }

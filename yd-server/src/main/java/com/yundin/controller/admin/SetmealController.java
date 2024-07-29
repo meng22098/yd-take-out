@@ -6,14 +6,14 @@ import com.yundin.entity.SetmealDish;
 import com.yundin.result.PageResult;
 import com.yundin.result.Result;
 import com.yundin.service.SetmealService;
+import com.yundin.vo.SetmealVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/admin/setmeal")
@@ -38,4 +38,13 @@ public class SetmealController {
         setmealService.save(setmealDTO);
         return Result.success();
     }
+    @GetMapping("/{id}")
+    @ApiOperation("根据id查询套餐")
+    public Result<SetmealVO> getById(@PathVariable("id") Integer id)
+    {
+        log.info("根据id查询套餐:{}",id);
+        SetmealVO setmealVO= setmealService.getById(id);
+        return Result.success(setmealVO);
+    }
+
 }

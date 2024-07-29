@@ -8,6 +8,7 @@ import com.yundin.entity.SetmealDish;
 import com.yundin.enumeration.OperationType;
 import com.yundin.vo.SetmealVO;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Select;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
@@ -17,4 +18,6 @@ public interface SetmealMapper {
     Page<SetmealVO> pageQery(SetmealPageQueryDTO setmealPageQueryDTO);
     @AutoFill(OperationType.INSERT)
     void save(Setmeal setmeal);
+    @Select("select * from setmeal where id=#{id}")
+    Setmeal getById(Integer id);
 }
