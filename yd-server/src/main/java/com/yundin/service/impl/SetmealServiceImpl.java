@@ -2,10 +2,14 @@ package com.yundin.service.impl;
 
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
+import com.yundin.constant.MessageConstant;
+import com.yundin.constant.StatusConstant;
 import com.yundin.dto.SetmealDTO;
 import com.yundin.dto.SetmealPageQueryDTO;
+import com.yundin.entity.Dish;
 import com.yundin.entity.Setmeal;
 import com.yundin.entity.SetmealDish;
+import com.yundin.exception.DeletionNotAllowedException;
 import com.yundin.mapper.SetmealDishMapper;
 import com.yundin.mapper.SetmealMapper;
 import com.yundin.result.PageResult;
@@ -95,6 +99,41 @@ public class SetmealServiceImpl implements SetmealService {
                 Flavor.setSetmealId(setmealId);
             });
             setmealDishMapper.insertBatch(setmealDishes);
+        }
+    }
+
+    /**
+     * 套餐起售、停售
+     * @param status
+     * @param id
+     */
+    @Override
+    public void startOrStop(Integer status, Long id) {
+        Setmeal setmeal=new Setmeal();
+        setmeal.setStatus(status);
+        setmeal.setId(id);
+        setmealMapper.update(setmeal);
+    }
+
+    /**
+     * 批量删除套餐
+     * @param ids
+     */
+    @Transactional//事务
+    @Override
+    public void delete(List<Long> ids) {
+        for (Long id : ids) {
+            Setmeal setmeal =setmealMapper.getById(Math.toIntExact(id));
+            if (setmeal.getStatus() == StatusConstant.ENABLE) {
+                //当前菜品处于起售中，不能删除
+                throw new DeletionNotAllowedException(MessageConstant.DISH_ON_SALE);
+            }
+        }
+        //删除菜品表中的菜品数据
+        for (Long id : ids) {
+            setmealMapper.deleteById(id);//后绪步骤实现
+            //删除菜品关联的口味数据
+            setmealDishMapper.deleteBy(id);//后绪步骤实现
         }
     }
 }

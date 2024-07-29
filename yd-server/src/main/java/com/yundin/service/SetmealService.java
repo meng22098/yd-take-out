@@ -5,6 +5,8 @@ import com.yundin.dto.SetmealPageQueryDTO;
 import com.yundin.result.PageResult;
 import com.yundin.vo.SetmealVO;
 
+import java.util.List;
+
 public interface SetmealService {
     PageResult pageQuery(SetmealPageQueryDTO setmealPageQueryDTO);
 
@@ -13,4 +15,8 @@ public interface SetmealService {
     SetmealVO getById(Integer id);
 
     void update(SetmealDTO setmealDTO);
+
+    void startOrStop(Integer status, Long id);
+
+    void delete(List<Long> ids);
 }

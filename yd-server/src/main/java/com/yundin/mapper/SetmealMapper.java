@@ -7,6 +7,7 @@ import com.yundin.entity.Setmeal;
 import com.yundin.entity.SetmealDish;
 import com.yundin.enumeration.OperationType;
 import com.yundin.vo.SetmealVO;
+import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,4 +23,6 @@ public interface SetmealMapper {
     Setmeal getById(Integer id);
     @AutoFill(OperationType.UPDATE)
     void update(Setmeal setmeal);
+    @Delete("delete from setmeal where id=#{id}")
+    void deleteById(Long id);
 }
