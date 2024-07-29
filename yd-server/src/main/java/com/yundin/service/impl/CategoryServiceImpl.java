@@ -29,6 +29,10 @@ public class CategoryServiceImpl implements CategoryService {
      */
     @Override
     public PageResult pageQuery(CategoryPageQueryDTO categoryPageQueryDTO) {
+        if (categoryPageQueryDTO.getName()!=null||categoryPageQueryDTO.getType()!=null)
+        {
+            categoryPageQueryDTO.setPage(1);
+        }
         PageHelper.startPage(categoryPageQueryDTO.getPage(), categoryPageQueryDTO.getPageSize());
         Page<Category> page=categoryMapper.pageQuery(categoryPageQueryDTO);
         //查询条数

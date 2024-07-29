@@ -90,6 +90,10 @@ public class EmployeeServiceImpl implements EmployeeService {
      */
     @Override
     public PageResult pageQuery(EmployeePageQueryDTO employeePageQueryDTO) {
+        if (employeePageQueryDTO.getName()!=null)
+        {
+            employeePageQueryDTO.setPage(1);
+        }
         //开始分页查询
         //PageHelper分页插件第一个是第几页，第二个是页的大小
         PageHelper.startPage(employeePageQueryDTO.getPage(), employeePageQueryDTO.getPageSize());

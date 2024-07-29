@@ -6,11 +6,15 @@ import com.yundin.entity.Dish;
 import com.yundin.result.PageResult;
 import com.yundin.result.Result;
 import com.yundin.service.DishService;
+import com.yundin.vo.DishVO;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiModelProperty;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/admin/dish")
@@ -34,6 +38,30 @@ public class DishColtroller {
     {
         log.info("新增菜品:{}",dishDTO);
         dishService.save(dishDTO);
+        return Result.success();
+    }
+    @GetMapping("/{id}")
+    @ApiOperation("根据id查询菜品")
+    public Result<DishVO> getById(@PathVariable("id") Integer id)
+    {
+        log.info("根据id查询菜品:{}",id);
+        DishVO dishVO=dishService.getById(id);
+        return Result.success(dishVO);
+    }
+    @GetMapping("list")
+    @ApiOperation("根据分类id查询菜品")
+    public Result<List<Dish>> list(Integer categoryId)
+    {
+        log.info("根据分类id查询菜品:{}",categoryId);
+        List<Dish> list=dishService.list(categoryId);
+        return Result.success(list);
+    }
+    @PutMapping
+    @ApiOperation("修改菜品")
+    public Result update(@RequestBody DishDTO dishDTO)
+    {
+        log.info("修改菜品:{}",dishDTO);
+        dishService.update(dishDTO);
         return Result.success();
     }
 }
