@@ -20,4 +20,6 @@ public interface DishService {
     void update(DishDTO dishDTO);
 
     void delete(List<Long> ids);
+
+    void startOrStop(Integer status, Long id);
 }

@@ -6,6 +6,7 @@ import com.yundin.constant.MessageConstant;
 import com.yundin.constant.StatusConstant;
 import com.yundin.dto.DishDTO;
 import com.yundin.dto.DishPageQueryDTO;
+import com.yundin.entity.Category;
 import com.yundin.entity.Dish;
 import com.yundin.entity.DishFlavor;
 import com.yundin.exception.DeletionNotAllowedException;
@@ -31,6 +32,11 @@ public class DishServiceImpl implements DishService {
     DishFlavorMapper dishFlavorMapper;
     @Autowired
     SetmealDishMapper setmealDishMapper;
+    /**
+     *分页搜索
+     *
+     * @param dishPageQueryDTO
+     */
     @Override
     public PageResult pageQuery(DishPageQueryDTO dishPageQueryDTO) {
         if (dishPageQueryDTO.getName()!=null||dishPageQueryDTO.getStatus()!=null||dishPageQueryDTO.getCategoryId()!=null)
@@ -43,6 +49,11 @@ public class DishServiceImpl implements DishService {
         List<DishVO> list=page.getResult();
         return new PageResult(total,list);
     }
+    /**
+     *添加菜单
+     *
+     * @param dishDTO
+     */
     @Override
     public void save(DishDTO dishDTO) {
         Dish dish=new Dish();
@@ -57,7 +68,11 @@ public class DishServiceImpl implements DishService {
             dishFlavorMapper.insertBatch(dishFlavor);//后绪步骤实现
         }
     }
-
+    /**
+     *根据id查询菜品
+     *
+     * @param id
+     */
     @Override
     public DishVO getById(Integer id) {
        Dish dish= dishMapper.getById(id);
@@ -68,10 +83,20 @@ public class DishServiceImpl implements DishService {
         return dishVO;
     }
 
+    /**
+     *根据分类id查询菜品
+     *
+     * @param categoryId
+     */
     @Override
     public List<Dish> list(Integer categoryId) {
         return dishMapper.list(categoryId);
     }
+    /**
+     * 菜品修改
+     *
+     * @param dishDTO
+     */
     @Transactional//事务
     @Override
     public void update(DishDTO dishDTO) {
@@ -117,5 +142,18 @@ public class DishServiceImpl implements DishService {
             //删除菜品关联的口味数据
             dishFlavorMapper.deleteByDishId(id);//后绪步骤实现
         }
+    }
+    /**
+     * 菜品起售、停售
+     *
+     * @param status
+     * @param id
+     */
+    @Override
+    public void startOrStop(Integer status, Long id) {
+        Dish dish=new Dish();
+        dish.setStatus(status);
+        dish.setId(id);
+        dishMapper.update(dish);
     }
 }
