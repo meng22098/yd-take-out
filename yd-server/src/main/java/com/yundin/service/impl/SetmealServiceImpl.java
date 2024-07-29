@@ -14,6 +14,7 @@ import com.yundin.vo.SetmealVO;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -30,6 +31,10 @@ public class SetmealServiceImpl implements SetmealService {
      */
     @Override
     public PageResult pageQuery(SetmealPageQueryDTO setmealPageQueryDTO) {
+        if (setmealPageQueryDTO.getName()!=null||setmealPageQueryDTO.getCategoryId()!=null||setmealPageQueryDTO.getStatus()!=null)
+        {
+            setmealPageQueryDTO.setPage(1);
+        }
         PageHelper.startPage(setmealPageQueryDTO.getPage(),setmealPageQueryDTO.getPageSize());
         Page<SetmealVO> page=setmealMapper.pageQery(setmealPageQueryDTO);
         long total=page.getTotal();
@@ -41,6 +46,7 @@ public class SetmealServiceImpl implements SetmealService {
      * 新增套餐
      * @param setmealDTO
      */
+    @Transactional//事务
     @Override
     public void save(SetmealDTO setmealDTO) {
         Setmeal setmeal=new Setmeal();
@@ -70,5 +76,25 @@ public class SetmealServiceImpl implements SetmealService {
         BeanUtils.copyProperties(setmeal,setmealVO);
         setmealVO.setSetmealDishes(setmealDishes);
         return setmealVO;
+    }
+
+    /**
+     * 修改套餐
+     * @param setmealDTO
+     */
+    @Transactional//事务
+    @Override
+    public void update(SetmealDTO setmealDTO) {
+        Setmeal setmeal=new Setmeal();
+        BeanUtils.copyProperties(setmealDTO,setmeal);
+        setmealMapper.update(setmeal);
+        List<SetmealDish> setmealDishes=setmealDTO.getSetmealDishes();
+        Long setmealId = setmeal.getId();
+        if (setmealDishes != null && setmealDishes.size() > 0) {
+            setmealDishes.forEach(Flavor -> {
+                Flavor.setSetmealId(setmealId);
+            });
+            setmealDishMapper.insertBatch(setmealDishes);
+        }
     }
 }

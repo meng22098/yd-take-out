@@ -20,4 +20,6 @@ public interface SetmealMapper {
     void save(Setmeal setmeal);
     @Select("select * from setmeal where id=#{id}")
     Setmeal getById(Integer id);
+    @AutoFill(OperationType.UPDATE)
+    void update(Setmeal setmeal);
 }
