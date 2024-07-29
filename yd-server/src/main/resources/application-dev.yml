@@ -6,3 +6,8 @@ yd:
     database: yd_take_out
     username: ityunbao
     password: 123456
+  qiniu:
+    ossPath: shd5fhs5b.hd-bkt.clouddn.com
+    accesskey: PcV_6bxJxFCpkRGAh03xxoKmqlJfViUEkY63TZSG
+    secretkey: 7LpDOYKvfMEJ9GYDfSRkNv7HmcwPBApObtDm4Kzy
+    bucketname: yunding11
