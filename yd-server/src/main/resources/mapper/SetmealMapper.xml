@@ -2,6 +2,10 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.yundin.mapper.SetmealMapper">
+    <insert id="save" useGeneratedKeys="true" keyProperty="id">
+        insert into setmeal(category_id,name,price,status,description,image,create_time,update_time,create_user,update_user)
+        values (#{categoryId},#{name},#{price},#{status},#{description},#{image},#{createTime},#{updateTime},#{createUser},#{updateUser})
+    </insert>
 
     <select id="pageQery" resultType="com.yundin.vo.SetmealVO">
         select *,c.name as categoryName from setmeal as s left join category as c on s.category_id=c.id

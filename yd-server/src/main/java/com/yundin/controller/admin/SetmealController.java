@@ -2,6 +2,7 @@ package com.yundin.controller.admin;
 
 import com.yundin.dto.SetmealDTO;
 import com.yundin.dto.SetmealPageQueryDTO;
+import com.yundin.entity.SetmealDish;
 import com.yundin.result.PageResult;
 import com.yundin.result.Result;
 import com.yundin.service.SetmealService;
@@ -9,6 +10,8 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -26,5 +29,13 @@ public class SetmealController {
         log.info("分页查询:{}",setmealPageQueryDTO);//日志
         PageResult pageResult=setmealService.pageQuery(setmealPageQueryDTO);
         return Result.success(pageResult);
+    }
+    @PostMapping
+    @ApiOperation("新增套餐")
+    public Result save(@RequestBody SetmealDTO setmealDTO)
+    {
+        log.info("新增套餐:{}",setmealDTO);
+        setmealService.save(setmealDTO);
+        return Result.success();
     }
 }

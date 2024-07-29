@@ -2,12 +2,17 @@ package com.yundin.service.impl;
 
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
+import com.yundin.dto.SetmealDTO;
 import com.yundin.dto.SetmealPageQueryDTO;
+import com.yundin.entity.Setmeal;
+import com.yundin.entity.SetmealDish;
+import com.yundin.mapper.SetmealDishMapper;
 import com.yundin.mapper.SetmealMapper;
 import com.yundin.result.PageResult;
 import com.yundin.service.SetmealService;
 import com.yundin.vo.SetmealVO;
 import org.apache.ibatis.annotations.Mapper;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +22,8 @@ import java.util.List;
 public class SetmealServiceImpl implements SetmealService {
     @Autowired
     SetmealMapper setmealMapper;
+    @Autowired
+    SetmealDishMapper setmealDishMapper;
     /**
      * 分页查询
      * @param setmealPageQueryDTO
@@ -29,5 +36,25 @@ public class SetmealServiceImpl implements SetmealService {
         long total=page.getTotal();
         List<SetmealVO> records=page.getResult();
         return new PageResult(total,records);
+    }
+
+    /**
+     * 新增套餐
+     * @param setmealDTO
+     */
+    @Override
+    public void save(SetmealDTO setmealDTO) {
+        Setmeal setmeal=new Setmeal();
+        BeanUtils.copyProperties(setmealDTO,setmeal);
+        setmealMapper.save(setmeal);
+        List<SetmealDish> list=setmealDTO.getSetmealDishes();
+        long setmealDishId=setmeal.getId();
+        if (list!=null||list.size()>0)
+        {
+            list.forEach(Flavor -> {
+                Flavor.setSetmealId(setmealDishId);
+            });
+            setmealDishMapper.insertBatch(list);
+        }
     }
 }
