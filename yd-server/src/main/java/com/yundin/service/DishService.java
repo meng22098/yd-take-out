@@ -18,4 +18,6 @@ public interface DishService {
     List<Dish> list(Integer categoryId);
 
     void update(DishDTO dishDTO);
+
+    void delete(List<Long> ids);
 }

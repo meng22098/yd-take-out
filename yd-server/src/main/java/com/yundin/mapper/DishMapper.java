@@ -6,6 +6,7 @@ import com.yundin.dto.DishPageQueryDTO;
 import com.yundin.entity.Dish;
 import com.yundin.enumeration.OperationType;
 import com.yundin.vo.DishVO;
+import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 
@@ -25,4 +26,6 @@ public interface DishMapper
     List<Dish> list(Integer categoryId);
     @AutoFill(OperationType.UPDATE)
     void update(Dish dish);
+    @Delete("delete from dish where id=#{id}")
+    void deleteById(Long id);
 }
