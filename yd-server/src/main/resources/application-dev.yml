@@ -11,3 +11,8 @@ yd:
     accesskey: PcV_6bxJxFCpkRGAh03xxoKmqlJfViUEkY63TZSG
     secretkey: 7LpDOYKvfMEJ9GYDfSRkNv7HmcwPBApObtDm4Kzy
     bucketname: yunding11
+  redis:
+    host: localhost
+    port: 6379
+    password: 123456
+    database: 10

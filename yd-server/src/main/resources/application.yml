@@ -42,3 +42,8 @@ yd:
     accesskey: ${yd.qnioss.accesskey}
     secretkey: ${yd.qnioss.secretkey}
     bucketname: ${yd.qnioss.bucketname}
+  redis:
+  host: ${yd.redis.host}
+  port: ${yd.redis.port}
+  password: ${yd.redis.password}
+  database: ${yd.redis.database}
