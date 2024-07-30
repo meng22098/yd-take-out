@@ -37,13 +37,19 @@ yd:
     admin-ttl: 7200000
     # 设置前端传递过来的令牌名称
     admin-token-name: token
+    user-secret-key: ityunbao
+    user-ttl: 7200000
+    user-token-name: authentication
   qnioss:
     ossPath: ${yd.qnioss.ossPath}
     accesskey: ${yd.qnioss.accesskey}
     secretkey: ${yd.qnioss.secretkey}
     bucketname: ${yd.qnioss.bucketname}
   redis:
-  host: ${yd.redis.host}
-  port: ${yd.redis.port}
-  password: ${yd.redis.password}
-  database: ${yd.redis.database}
+    host: ${yd.redis.host}
+    port: ${yd.redis.port}
+    password: ${yd.redis.password}
+    database: ${yd.redis.database}
+  wechat:
+    appid: ${yd.wechat.appid}
+    secret: ${yd.wechat.secret}
