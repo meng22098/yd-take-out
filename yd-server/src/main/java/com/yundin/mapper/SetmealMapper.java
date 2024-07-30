@@ -25,4 +25,6 @@ public interface SetmealMapper {
     void update(Setmeal setmeal);
     @Delete("delete from setmeal where id=#{id}")
     void deleteById(Long id);
+    @Select("select * from setmeal where category_id=#{categoryId} and status=1")
+    List<Setmeal> list(Integer categoryId);
 }

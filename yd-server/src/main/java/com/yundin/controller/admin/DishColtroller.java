@@ -51,10 +51,10 @@ public class DishColtroller {
     }
     @GetMapping("list")
     @ApiOperation("根据分类id查询菜品")
-    public Result<List<Dish>> list(Integer categoryId)
+    public Result<List<DishVO>> list(Integer categoryId)
     {
         log.info("根据分类id查询菜品:{}",categoryId);
-        List<Dish> list=dishService.list(categoryId);
+        List<DishVO> list=dishService.list(categoryId);
         return Result.success(list);
     }
     @PutMapping

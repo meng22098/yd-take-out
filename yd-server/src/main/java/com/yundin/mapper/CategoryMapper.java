@@ -20,6 +20,5 @@ public interface CategoryMapper {
     void update(Category category);
     @Delete("delete from category where id=#{id}")
     void delete(Integer id);
-    @Select("select * from category where type=#{type}")
     List<Category> list(Integer type);
 }

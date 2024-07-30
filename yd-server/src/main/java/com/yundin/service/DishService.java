@@ -15,11 +15,13 @@ public interface DishService {
 
     DishVO getById(Integer id);
 
-    List<Dish> list(Integer categoryId);
+    List<DishVO> list(Integer categoryId);
 
     void update(DishDTO dishDTO);
 
     void delete(List<Long> ids);
 
     void startOrStop(Integer status, Long id);
+
+    List<DishVO> list1(Integer id);
 }

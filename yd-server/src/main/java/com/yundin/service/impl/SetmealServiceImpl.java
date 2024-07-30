@@ -136,4 +136,14 @@ public class SetmealServiceImpl implements SetmealService {
             setmealDishMapper.deleteBy(id);//后绪步骤实现
         }
     }
+
+    /**
+     * 根据分类id查询套餐
+     * @param categoryId
+     * @return
+     */
+    @Override
+    public List<Setmeal> list(Integer categoryId) {
+        return setmealMapper.list(categoryId);
+    }
 }

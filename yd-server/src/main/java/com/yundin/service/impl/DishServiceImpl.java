@@ -83,15 +83,7 @@ public class DishServiceImpl implements DishService {
         return dishVO;
     }
 
-    /**
-     *根据分类id查询菜品
-     *
-     * @param categoryId
-     */
-    @Override
-    public List<Dish> list(Integer categoryId) {
-        return dishMapper.list(categoryId);
-    }
+
     /**
      * 菜品修改
      *
@@ -155,5 +147,38 @@ public class DishServiceImpl implements DishService {
         dish.setStatus(status);
         dish.setId(id);
         dishMapper.update(dish);
+    }
+
+    /**
+     * 根据套餐id查询包含的菜品
+     * @param id
+     * @return
+     */
+    @Override
+    public List<DishVO> list1(Integer id) {
+        List<DishVO> list=dishMapper.list1(id);
+        for (DishVO dishVO:list)
+        {
+            System.out.println(dishVO.getId());
+            List<DishFlavor> dishFlavors=dishFlavorMapper.getById(Math.toIntExact(dishVO.getId()));
+            dishVO.setFlavors(dishFlavors);
+        }
+        return list;
+    }
+    /**
+     *根据分类id查询菜品
+     *
+     * @param categoryId
+     */
+    @Override
+    public List<DishVO> list(Integer categoryId) {
+        List<DishVO> list=dishMapper.list(categoryId);
+        for (DishVO dishVO:list)
+        {
+            System.out.println(dishVO.getId());
+            List<DishFlavor> dishFlavors=dishFlavorMapper.getById(Math.toIntExact(dishVO.getId()));
+            dishVO.setFlavors(dishFlavors);
+        }
+        return list;
     }
 }

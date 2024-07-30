@@ -35,4 +35,8 @@
         </where>
         order by d.create_time desc
     </select>
+    <select id="list1" resultType="com.yundin.vo.DishVO">
+      select * from dish
+      where id in (select dish_id from setmeal_dish where setmeal_id =#{id})
+    </select>
 </mapper>

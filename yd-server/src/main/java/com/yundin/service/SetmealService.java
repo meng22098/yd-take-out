@@ -2,6 +2,7 @@ package com.yundin.service;
 
 import com.yundin.dto.SetmealDTO;
 import com.yundin.dto.SetmealPageQueryDTO;
+import com.yundin.entity.Setmeal;
 import com.yundin.result.PageResult;
 import com.yundin.vo.SetmealVO;
 
@@ -19,4 +20,6 @@ public interface SetmealService {
     void startOrStop(Integer status, Long id);
 
     void delete(List<Long> ids);
+
+    List<Setmeal> list(Integer categoryId);
 }
