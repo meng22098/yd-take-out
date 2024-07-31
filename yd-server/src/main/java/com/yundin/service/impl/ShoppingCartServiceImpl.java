@@ -38,7 +38,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
         ShoppingCart shoppingCart = new ShoppingCart();
         BeanUtils.copyProperties(shoppingCartDTO, shoppingCart);
         //只能查询自己的购物车数据，根据用户登录的id查询
-        shoppingCart.setUserId(BaseContext.getCurrentId());//
+        shoppingCart.setUserId(BaseContext.getCurrentId());
         log.info("用户id:{}",BaseContext.getCurrentId());
         //判断当前商品是否在购物车中
         List<ShoppingCart> shoppingCartList = shoppingCartMapper.list(shoppingCart);
@@ -69,5 +69,13 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
             shoppingCart.setCreateTime(LocalDateTime.now());
             shoppingCartMapper.insert(shoppingCart);
         }
+    }
+
+    @Override
+    public List<ShoppingCart> list() {
+        ShoppingCart shoppingCart = new ShoppingCart();
+        shoppingCart.setUserId(BaseContext.getCurrentId());
+        List<ShoppingCart> shoppingCartList = shoppingCartMapper.list(shoppingCart);
+        return shoppingCartList;
     }
 }
