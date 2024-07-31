@@ -3,6 +3,7 @@ package com.yundin.service.impl;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.yundin.constant.MessageConstant;
+import com.yundin.context.BaseContext;
 import com.yundin.dto.UserLoginDTO;
 import com.yundin.entity.User;
 import com.yundin.exception.LoginFailedException;
