@@ -15,7 +15,6 @@ public interface AddressBookMapper {
     List<AddressBook> list(Long id);
     @Select("select * from address_book where id=#{id}")
     AddressBook getId(Integer id);
-
     void update(AddressBook addressBook);
     @Delete("delete from address_book where id=#{id}")
     void delete(Integer id);
@@ -23,4 +22,6 @@ public interface AddressBookMapper {
     void deleteAll(long userId);
     @Select("select * from address_book where user_id=#{userId} and is_default=#{isDefault}")
     AddressBook getDefault(AddressBook addressBook);
+    @Select("select * from address_book where id=#{addressBookId}")
+    AddressBook getById(Long addressBookId);
 }

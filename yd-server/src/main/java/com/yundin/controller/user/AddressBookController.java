@@ -1,6 +1,4 @@
 package com.yundin.controller.user;
-
-import com.yundin.context.BaseContext;
 import com.yundin.entity.AddressBook;
 import com.yundin.result.Result;
 import com.yundin.service.AddressBookService;
@@ -78,6 +76,5 @@ public class AddressBookController {
            return Result.success(addressBook);
        }
         return Result.error("没有查询到默认地址");
-
     }
 }

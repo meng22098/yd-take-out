@@ -17,4 +17,6 @@ public interface OrderMapper {
     Integer ToBeConfirmed();
     @Select("select count(*) from orders where status=4")
     Integer DeliveryInProgress();
+
+    void insert(Orders order);
 }
