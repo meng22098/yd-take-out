@@ -1,6 +1,7 @@
 package com.yundin.mapper;
 
 import com.yundin.entity.ShoppingCart;
+import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Update;
 
@@ -14,4 +15,6 @@ public interface ShoppingCartMapper {
     void updateNumberById(ShoppingCart shoppingCart);
 
     void insert(ShoppingCart shoppingCart);
+    @Delete("delete from shopping_cart where user_id=#{id}")
+    void clean(long id);
 }
