@@ -1,6 +1,7 @@
 package com.yundin.controller.user;
 
 import com.yundin.constant.JwtClaimsConstant;
+import com.yundin.context.BaseContext;
 import com.yundin.dto.UserLoginDTO;
 import com.yundin.entity.User;
 import com.yundin.properties.JwtProperties;
@@ -34,7 +35,8 @@ public class UserController {
         User user= userService.login(userLoginDTO);
         //为微信用户生成jwt令牌
         Map<String, Object> claims = new HashMap<>();
-
+        //
+        BaseContext.setCurrentId(user.getId());
         claims.put(JwtClaimsConstant.USER_ID,user.getId());
 
         String token = JwtUtil.createJWT(jwtProperties.getUserSecretKey(), jwtProperties.getUserTtl(), claims);
