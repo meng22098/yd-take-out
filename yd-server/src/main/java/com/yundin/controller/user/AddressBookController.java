@@ -1,5 +1,6 @@
 package com.yundin.controller.user;
 
+import com.yundin.context.BaseContext;
 import com.yundin.entity.AddressBook;
 import com.yundin.result.Result;
 import com.yundin.service.AddressBookService;
@@ -49,5 +50,34 @@ public class AddressBookController {
         log.info("根据id修改地址{}",addressBook);
         addressBookService.update(addressBook);
         return Result.success();
+    }
+    @DeleteMapping
+    @ApiOperation("根据id删除地址")
+    public Result delete(Integer id)
+    {
+        log.info("根据id删除地址{}",id);
+        addressBookService.delete(id);
+        return Result.success();
+    }
+    @PutMapping("/default")
+    @ApiOperation("设置默认地址")
+    public Result setDefault(@RequestBody AddressBook addressBook)
+    {
+        log.info("设置默认地址{}",addressBook);
+        addressBookService.setDefault(addressBook);
+        return Result.success();
+    }
+    @GetMapping("/default")
+    @ApiOperation("查询默认地址")
+    public Result<AddressBook> getDefault()
+    {
+        log.info("查询默认地址");
+        AddressBook addressBook =addressBookService.getDefault();
+       if (addressBook!=null)
+       {
+           return Result.success(addressBook);
+       }
+        return Result.error("没有查询到默认地址");
+
     }
 }

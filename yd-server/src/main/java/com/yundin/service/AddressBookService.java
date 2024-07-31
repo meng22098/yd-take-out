@@ -12,4 +12,10 @@ public interface AddressBookService {
     AddressBook getId(Integer id);
 
     void update(AddressBook addressBook);
+
+    void delete(Integer id);
+
+    void setDefault(AddressBook addressBook);
+
+    AddressBook getDefault();
 }

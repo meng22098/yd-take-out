@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 
 @Mapper
 public interface UserMapper {
-    @Select("select * from user where id=#{openId}")
+    @Select("select * from user where openId=#{openId}")
     User login(String openId);
     void insert(User user);
 }
