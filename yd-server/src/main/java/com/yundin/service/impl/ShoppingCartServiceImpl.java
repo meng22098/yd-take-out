@@ -51,10 +51,10 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
         } else {
             //如果不存在，插入数据，数量就是1
             //判断当前添加到购物车的是菜品还是套餐
-            Integer dishId = Math.toIntExact(shoppingCartDTO.getDishId());
-            if (dishId != null) {
+            Long dishId =shoppingCartDTO.getDishId();
+            if (dishId!= null) {
                 //添加到购物车的是菜品
-                Dish dish = dishMapper.getById(dishId);
+                Dish dish = dishMapper.getById(Math.toIntExact(dishId));
                 shoppingCart.setName(dish.getName());
                 shoppingCart.setImage(dish.getImage());
                 shoppingCart.setAmount(dish.getPrice());
@@ -82,5 +82,28 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     @Override
     public void clean() {
          shoppingCartMapper.clean(BaseContext.getCurrentId());
+    }
+
+    @Override
+    public void sub(ShoppingCartDTO shoppingCartDTO) {
+        ShoppingCart shoppingCart = new ShoppingCart();
+        BeanUtils.copyProperties(shoppingCartDTO, shoppingCart);
+        //只能查询自己的购物车数据，根据用户登录的id查询
+        shoppingCart.setUserId(BaseContext.getCurrentId());
+        List<ShoppingCart> shoppingCartList = shoppingCartMapper.list(shoppingCart);
+        if (shoppingCartList!=null&&shoppingCartList.size()==1)
+        {
+            shoppingCart=shoppingCartList.get(0);
+            if (shoppingCart.getNumber()==1)
+            {
+                shoppingCartMapper.sub(shoppingCart);
+            }
+            else
+            {
+                shoppingCart.setNumber(shoppingCart.getNumber()-1);
+                shoppingCartMapper.updateNumberById(shoppingCart);
+            }
+        }
+
     }
 }
