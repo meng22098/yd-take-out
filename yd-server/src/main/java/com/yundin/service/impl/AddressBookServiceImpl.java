@@ -32,7 +32,21 @@ public class AddressBookServiceImpl implements AddressBookService {
      */
     @Override
     public List<AddressBook> list() {
-        log.info("用户id:{}",BaseContext.getCurrentId());
         return addressBookMapper.list(BaseContext.getCurrentId());
+    }
+
+    /**
+     * 根据id查询地址
+     * @param id
+     * @return
+     */
+    @Override
+    public AddressBook getId(Integer id) {
+        return addressBookMapper.getId(id);
+    }
+
+    @Override
+    public void update(AddressBook addressBook) {
+        addressBookMapper.update(addressBook);
     }
 }

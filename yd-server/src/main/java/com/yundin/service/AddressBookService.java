@@ -8,4 +8,8 @@ public interface AddressBookService {
     void save(AddressBook addressBook);
 
     List<AddressBook> list();
+
+    AddressBook getId(Integer id);
+
+    void update(AddressBook addressBook);
 }

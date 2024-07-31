@@ -11,4 +11,8 @@ public interface AddressBookMapper {
     void save(AddressBook addressBook);
     @Select("select * from address_book where user_id=#{id}")
     List<AddressBook> list(Long id);
+    @Select("select * from address_book where id=#{id}")
+    AddressBook getId(Integer id);
+
+    void update(AddressBook addressBook);
 }
