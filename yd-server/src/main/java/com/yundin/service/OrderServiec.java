@@ -10,8 +10,6 @@ import com.yundin.vo.OrderSubmitVO;
 import com.yundin.vo.OrderVO;
 
 public interface OrderServiec {
-    PageResult pgaeQuery(OrdersPageQueryDTO ordersPageQueryDTO);
-
     OrderStatisticsVO statistics();
 
     OrderSubmitVO submit(OrdersSubmitDTO ordersSubmitDTO);
@@ -21,4 +19,8 @@ public interface OrderServiec {
     PageResult userPgaeQuery(OrdersPageQueryDTO ordersPageQueryDTO);
 
     OrderVO details(Long id);
+
+    void cancel(Long id);
+
+    void repetition(Long id);
 }
