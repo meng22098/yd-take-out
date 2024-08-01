@@ -1,8 +1,10 @@
 package com.yundin.controller.user;
 
+import com.yundin.dto.OrdersPaymentDTO;
 import com.yundin.dto.OrdersSubmitDTO;
 import com.yundin.result.Result;
 import com.yundin.service.OrderServiec;
+import com.yundin.vo.OrderPaymentVO;
 import com.yundin.vo.OrderSubmitVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -24,5 +26,13 @@ public class OrderController {
         log.info("用户下单{}",ordersSubmitDTO);
         OrderSubmitVO orderSubmitVO=orderServiec.submit(ordersSubmitDTO);
         return Result.success(orderSubmitVO);
+    }
+    @PutMapping("/payment")
+    @ApiOperation("订单支付")
+    public Result<OrderPaymentVO> payment(@RequestBody OrdersPaymentDTO ordersPaymentDTO)
+    {
+        log.info("订单支付:{}",ordersPaymentDTO);
+        OrderPaymentVO orderPaymentVO= orderServiec.payment(ordersPaymentDTO);
+        return Result.success(orderPaymentVO);
     }
 }

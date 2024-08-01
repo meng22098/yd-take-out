@@ -6,6 +6,7 @@ import com.yundin.constant.MessageConstant;
 import com.yundin.context.BaseContext;
 import com.yundin.dto.OrdersDTO;
 import com.yundin.dto.OrdersPageQueryDTO;
+import com.yundin.dto.OrdersPaymentDTO;
 import com.yundin.dto.OrdersSubmitDTO;
 import com.yundin.entity.AddressBook;
 import com.yundin.entity.OrderDetail;
@@ -19,6 +20,7 @@ import com.yundin.mapper.OrderMapper;
 import com.yundin.mapper.ShoppingCartMapper;
 import com.yundin.result.PageResult;
 import com.yundin.service.OrderServiec;
+import com.yundin.vo.OrderPaymentVO;
 import com.yundin.vo.OrderStatisticsVO;
 import com.yundin.vo.OrderSubmitVO;
 import org.springframework.beans.BeanUtils;
@@ -41,6 +43,12 @@ public class OrderServiecImpl implements OrderServiec {
     private ShoppingCartMapper shoppingCartMapper;
     @Autowired
     private AddressBookMapper addressBookMapper;
+
+    /**
+     * 订单查询
+     * @param ordersPageQueryDTO
+     * @return
+     */
     @Override
     public PageResult pgaeQuery(OrdersPageQueryDTO ordersPageQueryDTO) {
         if (ordersPageQueryDTO.getNumber()!=null||ordersPageQueryDTO.getPhone()!=null ||ordersPageQueryDTO.getStatus()!=null
@@ -55,6 +63,10 @@ public class OrderServiecImpl implements OrderServiec {
         return new PageResult(total,result);
     }
 
+    /**
+     * 查询订单状态
+     * @return
+     */
     @Override
     public OrderStatisticsVO statistics() {
         OrderStatisticsVO orderStatisticsVO=new OrderStatisticsVO();
@@ -64,11 +76,16 @@ public class OrderServiecImpl implements OrderServiec {
         return orderStatisticsVO;
     }
 
+    /**
+     * 下单
+     * @param ordersSubmitDTO
+     * @return
+     */
     @Override
     @Transactional
     public OrderSubmitVO submit(OrdersSubmitDTO ordersSubmitDTO) {
         //异常情况的处理（收货地址为空、超出配送范围、购物车为空）
-        AddressBook addressBook = addressBookMapper.getById(ordersSubmitDTO.getAddressBookId());
+        AddressBook addressBook = addressBookMapper.getById(ordersSubmitDTO.getAddressBookId());//id获得地址
         if (addressBook == null) {
             throw new AddressBookBusinessException(MessageConstant.ADDRESS_BOOK_IS_NULL);
         }
@@ -116,5 +133,29 @@ public class OrderServiecImpl implements OrderServiec {
                 .orderTime(order.getOrderTime())
                 .build();
         return orderSubmitVO;
+    }
+    //支付
+    @Override
+    public OrderPaymentVO payment(OrdersPaymentDTO ordersPaymentDTO) {
+        // 当前登录用户id
+        Long userId = BaseContext.getCurrentId();
+        //商户平台订单号
+        // 根据订单号查询当前用户的订单
+        Orders ordersDB = orderMapper.getId(ordersPaymentDTO.getOrderNumber(), userId);
+        // 根据订单id更新订单的状态、支付方式、支付状态、结账时间
+        Orders orders = Orders.builder()
+                .id(ordersDB.getId())
+                .status(Orders.TO_BE_CONFIRMED)
+                .payStatus(Orders.PAID)
+                .checkoutTime(LocalDateTime.now())
+                .build();
+        orderMapper.update(orders);
+        OrderPaymentVO orderPaymentVO= OrderPaymentVO.builder()
+                .nonceStr("abc")
+                .paySign("")
+                .timeStamp("")
+                .signType("")
+                .packageStr("").build();
+        return orderPaymentVO;
     }
 }
