@@ -1,11 +1,14 @@
 package com.yundin.controller.user;
 
+import com.yundin.dto.OrdersPageQueryDTO;
 import com.yundin.dto.OrdersPaymentDTO;
 import com.yundin.dto.OrdersSubmitDTO;
+import com.yundin.result.PageResult;
 import com.yundin.result.Result;
 import com.yundin.service.OrderServiec;
 import com.yundin.vo.OrderPaymentVO;
 import com.yundin.vo.OrderSubmitVO;
+import com.yundin.vo.OrderVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
@@ -34,5 +37,21 @@ public class OrderController {
         log.info("订单支付:{}",ordersPaymentDTO);
         OrderPaymentVO orderPaymentVO= orderServiec.payment(ordersPaymentDTO);
         return Result.success(orderPaymentVO);
+    }
+    @GetMapping("/historyOrders")
+    @ApiOperation("订单搜索")
+    public Result<PageResult> page(OrdersPageQueryDTO ordersPageQueryDTO)
+    {
+        log.info("订单搜索{}",ordersPageQueryDTO);
+        PageResult pageResult=orderServiec.userPgaeQuery(ordersPageQueryDTO);
+        return Result.success(pageResult);
+    }
+    @GetMapping("/orderDetail/{id}")
+    @ApiOperation("查询订单详情")
+    public Result<OrderVO> details(@PathVariable("id") Long id)
+    {
+        log.info("查询订单详情{}",id);
+        OrderVO orderVO =orderServiec.details(id);
+        return Result.success(orderVO);
     }
 }

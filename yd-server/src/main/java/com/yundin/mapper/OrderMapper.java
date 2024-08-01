@@ -10,7 +10,7 @@ import org.apache.ibatis.annotations.Select;
 
 @Mapper
 public interface OrderMapper {
-    Page<Orders> pageQuery(OrdersPageQueryDTO ordersPageQueryDTO);
+    Page<Orders> userPageQuery(OrdersPageQueryDTO ordersPageQueryDTO);
     @Select("select count(*) from orders where status=3")
     Integer Confirmed();
     @Select("select count(*) from orders where status=2")
@@ -23,4 +23,8 @@ public interface OrderMapper {
     Orders getId(String orderNumber, Long userId);
 
     void update(Orders orders);
+
+    Page<Orders> pageQuery(OrdersPageQueryDTO ordersPageQueryDTO);
+    @Select("select * from orders where id=#{id}")
+    Orders getById(Long id);
 }

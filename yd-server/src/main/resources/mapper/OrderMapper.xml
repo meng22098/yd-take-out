@@ -39,6 +39,26 @@
         where id = #{id}
     </update>
 
+    <select id="userPageQuery" resultType="com.yundin.entity.Orders">
+        select * from orders
+        <where>
+            <if test="phone!=null">
+                and phone like concat('%',#{phone},'%')
+            </if>
+            <if test="number!=null">
+                and number=#{number}
+            </if>
+            <if test="status!=null">
+                and status = #{status}
+            </if>
+            <if test="endTime!=null">
+                and #{endTime}>=order_time
+            </if>
+            <if test="beginTime!=null">
+                and order_time>=#{beginTime}
+            </if>
+        </where>
+    </select>
     <select id="pageQuery" resultType="com.yundin.entity.Orders">
         select * from orders
         <where>

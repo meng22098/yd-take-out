@@ -7,6 +7,7 @@ import com.yundin.result.PageResult;
 import com.yundin.vo.OrderPaymentVO;
 import com.yundin.vo.OrderStatisticsVO;
 import com.yundin.vo.OrderSubmitVO;
+import com.yundin.vo.OrderVO;
 
 public interface OrderServiec {
     PageResult pgaeQuery(OrdersPageQueryDTO ordersPageQueryDTO);
@@ -16,4 +17,8 @@ public interface OrderServiec {
     OrderSubmitVO submit(OrdersSubmitDTO ordersSubmitDTO);
 
     OrderPaymentVO payment(OrdersPaymentDTO ordersPaymentDTO);
+
+    PageResult userPgaeQuery(OrdersPageQueryDTO ordersPageQueryDTO);
+
+    OrderVO details(Long id);
 }
