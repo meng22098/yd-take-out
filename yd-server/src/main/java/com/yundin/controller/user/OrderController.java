@@ -22,6 +22,13 @@ import org.springframework.web.bind.annotation.*;
 public class OrderController {
     @Autowired
     OrderServiec orderServiec;
+    @GetMapping("/reminder/{id}")
+    @ApiOperation("用户催单")
+    public Result reminder(@PathVariable("id") Long id) {
+        log.info("用户下单{}",id);
+        orderServiec.reminder(id);
+        return Result.success();
+    }
     @PostMapping("/submit")
     @ApiOperation("用户下单")
     public Result<OrderSubmitVO> submit(@RequestBody OrdersSubmitDTO ordersSubmitDTO)

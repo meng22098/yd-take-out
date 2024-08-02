@@ -31,4 +31,6 @@ public interface OrderServiec {
     void delivery(Long id);
 
     void complete(Long id);
+
+    void reminder(Long id);
 }

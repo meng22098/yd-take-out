@@ -1,8 +1,14 @@
 package com.yundin.service.impl;
 
+import com.alibaba.fastjson.JSON;
+import com.alipay.api.AlipayApiException;
+import com.alipay.api.AlipayClient;
+import com.alipay.api.DefaultAlipayClient;
+import com.alipay.api.request.AlipayTradePagePayRequest;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.yundin.constant.MessageConstant;
+import com.yundin.constant.PayConstant;
 import com.yundin.context.BaseContext;
 import com.yundin.dto.*;
 import com.yundin.entity.AddressBook;
@@ -22,8 +28,8 @@ import com.yundin.vo.OrderPaymentVO;
 import com.yundin.vo.OrderStatisticsVO;
 import com.yundin.vo.OrderSubmitVO;
 import com.yundin.vo.OrderVO;
+import com.yundin.websocket.WebSocketServer;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.ibatis.annotations.Select;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -31,7 +37,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -46,6 +54,8 @@ public class OrderServiecImpl implements OrderServiec {
     private ShoppingCartMapper shoppingCartMapper;
     @Autowired
     private AddressBookMapper addressBookMapper;
+    @Autowired
+    WebSocketServer webSocketServer;
 
     /**
      * 用户订单查询
@@ -69,7 +79,6 @@ public class OrderServiecImpl implements OrderServiec {
             List<OrderDetail> orderDetails=orderDetailMapper.getId(orders.getId());
             OrderVO orderVO = new OrderVO();
             BeanUtils.copyProperties(orders, orderVO);
-            log.info("订单菜品信息:{}",orderVO.getOrderDishes());
             orderVO.setOrderDetailList(orderDetails);
             String orderDishes ="";
             for (OrderDetail orderDetail:orderDetails)
@@ -271,6 +280,20 @@ public class OrderServiecImpl implements OrderServiec {
         orderMapper.update(orders);
     }
 
+    @Override
+    public void reminder(Long id) {
+        Orders orders = orderMapper.getById(id);
+        if(orders == null){
+            throw new OrderBusinessException(MessageConstant.ORDER_NOT_FOUND);
+        }
+        //////////通过webSocket发送消息给前端///////////////
+        Map map = new HashMap();
+        map.put("type",2);//消息类型 催单提醒
+        map.put("orderId",orders.getId());
+        map.put("content","订单号："+orders.getNumber());
+        webSocketServer.sendToAllClient(JSON.toJSONString(map));
+    }
+
     /**
      * 查询订单状态
      * @return
@@ -340,6 +363,12 @@ public class OrderServiecImpl implements OrderServiec {
                 .orderAmount(order.getAmount())
                 .orderTime(order.getOrderTime())
                 .build();
+        Map map = new HashMap();
+        map.put("type", 1);//消息类型，1表示来单提醒
+        map.put("orderId", order.getId());
+        map.put("content", "订单号：" + order.getNumber());
+        //通过WebSocket实现来单提醒，向客户端浏览器推送消息
+        webSocketServer.sendToAllClient(JSON.toJSONString(map));
         return orderSubmitVO;
     }
 
@@ -370,5 +399,32 @@ public class OrderServiecImpl implements OrderServiec {
                 .signType("")
                 .packageStr("").build();
         return orderPaymentVO;
+    }
+    /*
+  参数1：订单号
+  参数2：订单金额
+  参数3：订单名称
+   */
+    //支付宝官方提供的接口
+    private String sendRequestToAlipay(String outTradeNo,Float totalAmount,String subject) throws AlipayApiException {
+        //获得初始化的AlipayClient
+        AlipayClient alipayClient = new DefaultAlipayClient(PayConstant.GATEWAY_URL,PayConstant.APP_ID,PayConstant.APP_PRIVATE_KEY,PayConstant.FORMAT,PayConstant.CHARSET,PayConstant.ALIPAY_PUBLIC_KEY,PayConstant.SIGN_TYPE);
+
+        //设置请求参数
+        AlipayTradePagePayRequest alipayRequest = new AlipayTradePagePayRequest();
+        alipayRequest.setReturnUrl(PayConstant.RETURN_URL);
+        alipayRequest.setNotifyUrl(PayConstant.NOTIFY_URL);
+
+        //商品描述（可空）
+        String body="";
+        alipayRequest.setBizContent("{\"out_trade_no\":\"" + outTradeNo + "\","
+                + "\"total_amount\":\"" + totalAmount + "\","
+                + "\"subject\":\"" + subject + "\","
+                + "\"body\":\"" + body + "\","
+                + "\"product_code\":\"FAST_INSTANT_TRADE_PAY\"}");
+
+        //请求
+        String result = alipayClient.pageExecute(alipayRequest).getBody();
+        return result;
     }
 }

@@ -8,6 +8,9 @@ import com.yundin.vo.OrderStatisticsVO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 
+import java.time.LocalDateTime;
+import java.util.List;
+
 @Mapper
 public interface OrderMapper {
     Page<Orders> userPageQuery(OrdersPageQueryDTO ordersPageQueryDTO);
@@ -27,4 +30,6 @@ public interface OrderMapper {
     Page<Orders> pageQuery(OrdersPageQueryDTO ordersPageQueryDTO);
     @Select("select * from orders where id=#{id}")
     Orders getById(Long id);
+    @Select("select * from orders where status = #{pendingPayment} and order_time < #{time}")
+    List<Orders> getByStatusAndOrdertimeLT(Integer pendingPayment, LocalDateTime time);
 }
