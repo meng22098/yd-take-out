@@ -29,4 +29,6 @@ public interface DishMapper
     @Delete("delete from dish where id=#{id}")
     void deleteById(Long id);
     List<DishVO> list1(Integer id);
+
+    Integer countByMap(Map map);
 }

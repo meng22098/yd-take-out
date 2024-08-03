@@ -13,6 +13,7 @@ import org.apache.ibatis.annotations.Select;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
+import java.util.Map;
 
 @Mapper
 public interface SetmealMapper {
@@ -27,4 +28,6 @@ public interface SetmealMapper {
     void deleteById(Long id);
     @Select("select * from setmeal where category_id=#{categoryId} and status=1")
     List<Setmeal> list(Integer categoryId);
+
+    Integer countByMap(Map map);
 }
