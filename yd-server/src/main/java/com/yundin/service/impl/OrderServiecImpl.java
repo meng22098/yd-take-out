@@ -7,14 +7,12 @@ import com.alipay.api.DefaultAlipayClient;
 import com.alipay.api.request.AlipayTradePagePayRequest;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
+import com.yundin.config.AliPayConfig;
 import com.yundin.constant.MessageConstant;
 import com.yundin.constant.PayConstant;
 import com.yundin.context.BaseContext;
 import com.yundin.dto.*;
-import com.yundin.entity.AddressBook;
-import com.yundin.entity.OrderDetail;
-import com.yundin.entity.Orders;
-import com.yundin.entity.ShoppingCart;
+import com.yundin.entity.*;
 import com.yundin.exception.AddressBookBusinessException;
 import com.yundin.exception.OrderBusinessException;
 import com.yundin.exception.ShoppingCartBusinessException;
@@ -35,6 +33,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.Resource;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -56,6 +55,8 @@ public class OrderServiecImpl implements OrderServiec {
     private AddressBookMapper addressBookMapper;
     @Autowired
     WebSocketServer webSocketServer;
+    @Resource
+    AliPayConfig aliPayConfig;
 
     /**
      * 用户订单查询

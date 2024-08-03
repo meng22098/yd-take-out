@@ -1,5 +1,10 @@
 package com.yundin.controller.user;
 
+import com.alipay.api.AlipayApiException;
+import com.alipay.api.AlipayClient;
+import com.alipay.api.DefaultAlipayClient;
+import com.alipay.api.request.AlipayTradePagePayRequest;
+import com.yundin.config.AliPayConfig;
 import com.yundin.dto.OrdersPageQueryDTO;
 import com.yundin.dto.OrdersPaymentDTO;
 import com.yundin.dto.OrdersSubmitDTO;
@@ -15,6 +20,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+
 @RestController("userOrderController")
 @RequestMapping("/user/order")
 @Slf4j
@@ -22,6 +30,8 @@ import org.springframework.web.bind.annotation.*;
 public class OrderController {
     @Autowired
     OrderServiec orderServiec;
+    @Autowired
+    AliPayConfig aliPayConfig;
     @GetMapping("/reminder/{id}")
     @ApiOperation("用户催单")
     public Result reminder(@PathVariable("id") Long id) {
@@ -39,9 +49,7 @@ public class OrderController {
     }
     @PutMapping("/payment")
     @ApiOperation("订单支付")
-    public Result<OrderPaymentVO> payment(@RequestBody OrdersPaymentDTO ordersPaymentDTO)
-    {
-        log.info("订单支付:{}",ordersPaymentDTO);
+    public Result<OrderPaymentVO> payment(@RequestBody OrdersPaymentDTO ordersPaymentDTO) throws IOException {
         OrderPaymentVO orderPaymentVO= orderServiec.payment(ordersPaymentDTO);
         return Result.success(orderPaymentVO);
     }
