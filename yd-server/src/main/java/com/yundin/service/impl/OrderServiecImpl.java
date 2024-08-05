@@ -1,15 +1,10 @@
 package com.yundin.service.impl;
 
 import com.alibaba.fastjson.JSON;
-import com.alipay.api.AlipayApiException;
-import com.alipay.api.AlipayClient;
-import com.alipay.api.DefaultAlipayClient;
-import com.alipay.api.request.AlipayTradePagePayRequest;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.yundin.config.AliPayConfig;
 import com.yundin.constant.MessageConstant;
-import com.yundin.constant.PayConstant;
 import com.yundin.context.BaseContext;
 import com.yundin.dto.*;
 import com.yundin.entity.*;
@@ -400,32 +395,5 @@ public class OrderServiecImpl implements OrderServiec {
                 .signType("")
                 .packageStr("").build();
         return orderPaymentVO;
-    }
-    /*
-  参数1：订单号
-  参数2：订单金额
-  参数3：订单名称
-   */
-    //支付宝官方提供的接口
-    private String sendRequestToAlipay(String outTradeNo,Float totalAmount,String subject) throws AlipayApiException {
-        //获得初始化的AlipayClient
-        AlipayClient alipayClient = new DefaultAlipayClient(PayConstant.GATEWAY_URL,PayConstant.APP_ID,PayConstant.APP_PRIVATE_KEY,PayConstant.FORMAT,PayConstant.CHARSET,PayConstant.ALIPAY_PUBLIC_KEY,PayConstant.SIGN_TYPE);
-
-        //设置请求参数
-        AlipayTradePagePayRequest alipayRequest = new AlipayTradePagePayRequest();
-        alipayRequest.setReturnUrl(PayConstant.RETURN_URL);
-        alipayRequest.setNotifyUrl(PayConstant.NOTIFY_URL);
-
-        //商品描述（可空）
-        String body="";
-        alipayRequest.setBizContent("{\"out_trade_no\":\"" + outTradeNo + "\","
-                + "\"total_amount\":\"" + totalAmount + "\","
-                + "\"subject\":\"" + subject + "\","
-                + "\"body\":\"" + body + "\","
-                + "\"product_code\":\"FAST_INSTANT_TRADE_PAY\"}");
-
-        //请求
-        String result = alipayClient.pageExecute(alipayRequest).getBody();
-        return result;
     }
 }

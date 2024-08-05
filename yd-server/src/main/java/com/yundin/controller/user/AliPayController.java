@@ -4,11 +4,9 @@ import com.alipay.easysdk.factory.Factory;
 import com.yundin.config.AliPayConfig;
 import com.yundin.entity.Orders;
 import com.yundin.mapper.OrderMapper;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.alipay.api.AlipayApiException;
 import com.alipay.api.AlipayClient;
@@ -25,25 +23,23 @@ import java.util.Map;
 @RestController
 @RequestMapping("alipay")
 @Transactional(rollbackFor = Exception.class)
+@Slf4j
 public class AliPayController {
 
     @Resource
     AliPayConfig aliPayConfig;
     @Resource
     private OrderMapper orderMapper;
-    private static final String GATEWAY_URL ="https://openapi-sandbox.dl.alipaydev.com/gateway.do";
-    private static final String FORMAT ="JSON";
-    private static final String CHARSET ="utf-8";
-    private static final String SIGN_TYPE ="RSA2";
     @GetMapping("/pay") // &subject=xxx&traceNo=xxx&totalAmount=xxx
-    public void pay(Integer id,HttpServletResponse httpResponse) throws Exception {
+    public void pay(HttpServletResponse httpResponse) throws Exception {
+        System.out.println("支付");
         //实例化客户端,填入所需参数
-        AlipayClient alipayClient = new DefaultAlipayClient(GATEWAY_URL, aliPayConfig.getAppId(), aliPayConfig.getAppPrivateKey(), FORMAT, CHARSET, aliPayConfig.getAlipayPublicKey(), SIGN_TYPE);
+        AlipayClient alipayClient = new DefaultAlipayClient(aliPayConfig.GATEWAY_URL, aliPayConfig.getAppId(), aliPayConfig.getAppPrivateKey(), aliPayConfig.FORMAT,  aliPayConfig.CHARSET, aliPayConfig.getAlipayPublicKey(),aliPayConfig.SIGN_TYPE);
         AlipayTradePagePayRequest request = new AlipayTradePagePayRequest();
         //在公共参数中设置回跳和通知地址
         request.setNotifyUrl(aliPayConfig.getNotifyUrl());
         //商品描述，可空
-        request.setBizContent("{\"out_trade_no\":\"" + id+ "\"," + "\"total_amount\":\"" + 120 + "\"," + "\"subject\":\"" + 1 + "\"," + "\"product_code\":\"FAST_INSTANT_TRADE_PAY\"}");
+        request.setBizContent("{\"out_trade_no\":\"" +"789"+ "\"," + "\"total_amount\":\"" + 120 + "\"," + "\"subject\":\"" + 1 + "\"," + "\"product_code\":\"FAST_INSTANT_TRADE_PAY\"}");
         String form = "";
         try {
             // 调用SDK生成表单
@@ -51,7 +47,7 @@ public class AliPayController {
         } catch (AlipayApiException e) {
             e.printStackTrace();
         }
-        httpResponse.setContentType("text/html;charset=" + CHARSET);
+        httpResponse.setContentType("text/html;charset=" +aliPayConfig.CHARSET);
         // 直接将完整的表单html输出到页面
         httpResponse.getWriter().write(form);
         httpResponse.getWriter().flush();
@@ -59,6 +55,7 @@ public class AliPayController {
     }
     @PostMapping("/notify")  // 注意这里必须是POST接口
     public String payNotify(HttpServletRequest request) throws Exception {
+        System.out.println("支付成功");
         if (request.getParameter("trade_status").equals("TRADE_SUCCESS")) {
             System.out.println("=========支付宝异步回调========");
 

@@ -22,7 +22,7 @@ public interface DishMapper
 
     @Select("select d.*,c.name as categoryName  from dish as d left join category as c on d.category_id=c.id where d.id=#{id} order by d.create_time desc")
     Dish getById(Integer id);
-    @Select("select *  from dish where category_id=#{categoryId}")
+    @Select("select *  from dish where category_id=#{categoryId} and status=1")
     List<DishVO> list(Integer categoryId);
     @AutoFill(OperationType.UPDATE)
     void update(Dish dish);
